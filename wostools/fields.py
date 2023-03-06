@@ -219,5 +219,5 @@ def parse_all(raw_dict: Dict[str, List[str]]) -> Mapping[str, Any]:
     processed_data = {}
     raw_dict.setdefault("CR", [])
     for key, seq in raw_dict.items():
-        processed_data.update(parse(key, seq))
+        processed_data |= parse(key, seq)
     return processed_data

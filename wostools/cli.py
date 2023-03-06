@@ -29,7 +29,7 @@ def citation_pairs(sources, output):
     Build a collection by using the sources and print the citation pairs in json
     format or dumps them in the `output`.
     """
-    if not len(sources) > 0:
+    if len(sources) <= 0:
         click.secho("You should give at least a file with documents.", fg="red")
         return
 
@@ -63,7 +63,7 @@ def to_json(sources, output, more):
     Build a collection by using the sources and print the citation pairs in json
     format or dumps them in the `output`.
     """
-    if not len(sources) > 0:
+    if len(sources) <= 0:
         click.secho("You should give at least a file with documents.", fg="red")
         return
 

@@ -27,9 +27,7 @@ def _int_or_nothing(raw: Optional[List[str]]) -> Optional[int]:
 
 
 def _joined(raw: Optional[List[str]]) -> Optional[str]:
-    if not raw:
-        return None
-    return " ".join(raw)
+    return " ".join(raw) if raw else None
 
 
 def _find_volume_info(ref: str) -> Tuple[Dict[str, str], str]:
@@ -51,7 +49,7 @@ def _find_volume_info(ref: str) -> Tuple[Dict[str, str], str]:
 
     data = {}
     if page:
-        data.update(page.groupdict())
+        data |= page.groupdict()
     if volume:
         data.update(volume.groupdict())
 
@@ -84,9 +82,9 @@ def _scopus_ref_to_isi(scopusref: str) -> str:
     parts = {
         "author": f"{first_name} {last_name.replace(' ', '').replace('.', '')}",
         "year": year,
-        "journal": journal.strip().replace(".", "").upper()
-        if not journal.isspace()
-        else None,
+        "journal": None
+        if journal.isspace()
+        else journal.strip().replace(".", "").upper(),
         "volume": volume_info.get("volume"),
         "page": volume_info.get("page"),
         "doi": doi,
@@ -156,5 +154,4 @@ def parse_file(file: TextIO) -> Iterable[Article]:
     for item in file.read().split("\n\n"):
         if item.isspace():
             continue
-        article = parse_record(item.strip())
-        yield article
+        yield parse_record(item.strip())

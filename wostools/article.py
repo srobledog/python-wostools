@@ -56,9 +56,7 @@ class Article:
 
     @property
     def label(self) -> str:
-        if self.doi:
-            return self.doi
-        return self._label()
+        return self.doi or self._label()
 
     def _label(self, exclude_doi=False, lower_p=False) -> str:
         if not (self.authors and self.year and self.journal):
@@ -76,28 +74,30 @@ class Article:
 
     @property
     def labels(self) -> Set[str]:
-        if not self.doi:
-            return {self.label, self._label(lower_p=True)}
-        return {
-            self.doi,
-            self.label,
-            self._label(exclude_doi=True),
-            self._label(lower_p=True),
-            self._label(exclude_doi=True, lower_p=True),
-        }
+        return (
+            {
+                self.doi,
+                self.label,
+                self._label(exclude_doi=True),
+                self._label(lower_p=True),
+                self._label(exclude_doi=True, lower_p=True),
+            }
+            if self.doi
+            else {self.label, self._label(lower_p=True)}
+        )
 
     def to_dict(self, simplified=True):
         """
         Transform the article into some key value pairs for easy transportation.
         """
         extra = (
-            {
+            {}
+            if simplified
+            else {
                 "references": self.references,
                 "extra": self.extra,
                 "sources": list(self.sources),
             }
-            if not simplified
-            else {}
         )
         return {
             "title": self.title,

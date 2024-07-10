@@ -7,3 +7,4 @@ pytest-watch==4.2.0
 pytest-bdd==4.0.1
 
 dataclasses==0.8; python_version < "3.7"
+zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
